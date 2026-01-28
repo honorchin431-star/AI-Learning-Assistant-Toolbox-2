@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE Direct Solver</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #f43f5e; --text: #f8fafc; } /* 把主色调改成红色，代表“紧急/直接” */
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { color: var(--accent); margin-bottom: 10px; font-size: 2.5rem; letter-spacing: -1px; }
+        .subtitle { color: #94a3b8; font-size: 1.1rem; }
+
+        /* Filter Buttons */
+        .filter-container { text-align: center; margin-bottom: 40px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .filter-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #cbd5e1;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        .filter-btn:hover, .filter-btn.active { 
+            background: var(--accent); 
+            color: white; 
+            font-weight: bold; 
+            transform: translateY(-2px);
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        
+        .tool-card { background: var(--card); padding: 25px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; position: relative; }
+        .tool-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        
+        .tag { font-size: 0.7rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; background: #334155; color: white; }
+
+        h3 { margin: 0 0 10px 0; font-size: 1.4rem; }
+        p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px; min-height: 45px; }
+
+        .prompt-box { 
+            background: rgba(0,0,0,0.4); 
+            padding: 15px; 
+            border-radius: 10px; 
+            font-size: 0.85rem; 
+            color: #e2e8f0; 
+            border-left: 4px solid var(--accent);
+            font-family: 'Consolas', monospace;
+            margin-bottom: 20px;
+            height: 110px; 
+            overflow-y: auto;
+            line-height: 1.5;
+        }
+
+        .copy-btn { 
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            width: 100%; 
+            transition: 0.2s; 
+        }
+        .copy-btn:hover { opacity: 0.9; transform: scale(1.02); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" style="color: var(--accent); text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px;">← Back to Hub</a>
+        
+        <header>
+            <h1>⚡ Direct Answer Key</h1>
+            <p class="subtitle">Get the solution immediately. No lectures, just answers.</p>
+        </header>
+
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterSelection('all')">All</button>
+            <button class="filter-btn" onclick="filterSelection('stem')">Math & Sci</button>
+            <button class="filter-btn" onclick="filterSelection('lang')">Languages</button>
+            <button class="filter-btn" onclick="filterSelection('hum')">Humanities</button>
+            <button class="filter-btn" onclick="filterSelection('biz')">Business</button>
+            <button class="filter-btn" onclick="filterSelection('tech')">Tech</button>
+        </div>
+
+        <div class="grid">
+            
+            <div class="tool-card stem">
+                <span class="tag">Math</span>
+                <h3>Instant Solver</h3>
+                <p>Gives the final answer + working instantly.</p>
+                <div class="prompt-box" id="p_math">"Solve this math problem immediately. Show the full working steps clearly and highlight the FINAL ANSWER at the end. Here is the problem: [Insert Question]"</div>
+                <button class="copy-btn" onclick="copyText('p_math')">Copy Prompt</button>
+            </div>
+
+            <div class="tool-card stem">
+                <span class="tag">Biology</span>
+                <h3>Direct Definition</h3>
+                <p>Get the exact textbook answer for exams.</p>
+                <div class="prompt-box" id="p_bio">"Give me the direct IGCSE definition for [Insert Topic]. List 3 key points I must write to get full marks in an exam. Do not explain extra details."</div>
+                <button class="copy-btn" onclick="copyText('p_bio')">Copy Prompt</button>
+            </div>
+
+            <div class="tool-card stem">
+                <span class="tag">Chemistry</span>
+                <h3>Reaction Output</h3>
+                <p>Tells you exactly what products are formed.</p>
+                <div class="prompt-box" id="p_chem">"Complete this chemical equation and balance it immediately. State the products formed and any observations (e.g., color change) I need to know."</div>
+                <button class="copy-btn" onclick="copyText('p_chem')">Copy Prompt</button>
+            </div>
+
+            <div class="tool-card stem">
+                <span class="tag">Physics</span>
+                <h3>Calculation Generator</h3>
+                <p>Inputs values -> Outputs answer.</p>
+                <div class="prompt-box" id="p_phy">"Here are the variables: [e.g., Mass=10kg, Acc=5m/s²]. Calculate the [e.g., Force] immediately using the correct formula. Show the result."</div>
+                <button class="copy-btn" onclick="copyText('p_phy')">Copy Prompt</button>
+            </div>
+
+            <div class="tool-card lang">
+                <span class="tag">English</span>
+                <h3>Paragraph Rewriter</h3>
+                <p>Turns bad writing into Band 1 writing instantly.</p>
+                <div class="prompt-box" id="p_eng">"Rewrite this paragraph IMMEDIATELY to be IGCSE Band 1 standard. Fix all grammar, use advanced vocabulary, and improve flow. Do not explain the changes, just give me the text."</div>
+                <button class="copy-btn" onclick="copyText('p_eng')">Copy Prompt</button>
+            </div>
+
+            <div class="tool-card lang">
+                <span class="tag">Malay / Chinese</span>
+                <h3>Sentence Fixer</h3>
+                <p>Corrects errors instantly.</p>
+                <div class="prompt-box" id="p_lang">"Correct the grammar and spelling in this [Malay/Chinese] sentence immediately. Provide the correct version only."</div>
+                <button class="copy-btn" onclick="copyText('p_lang')">Copy Prompt</button>
+            </div>
+
+            <div class="tool-card hum">
+                <span class="tag">History</span>
+                <h3>Fact Generator</h3>
+                <p>Dates, names, and stats for essays.</p>
+                <div class="prompt-box" id="p_hist">"List the 5 main causes of [Event, e.g., WWII] in bullet points. Include key dates and specific figures for each point."</div>
+                <button class="copy-btn" onclick="copyText('p_hist')">Copy Prompt</button>
+            </div>
+
+            <div class="tool-card hum">
+                <span class="tag">Geography</span>
+                <h3>Case Study Sheet</h3>
+                <p>Generates a full cheat sheet for any topic.</p>
+                <div class="prompt-box" id="p_geo">"Generate a complete Case Study for [Topic]. Include: Location, Causes, Impacts (Social, Economic, Environmental), and Responses. Keep it point-form."</div>
+                <button class="copy-btn" onclick="copyText('p_geo')">Copy Prompt</button>
+            </div>
+
+            <div class="tool-card biz">
+                <span class="tag">Business</span>
+                <h3>Answer Generator</h3>
+                <p>Generates standard business answers.</p>
+                <div class="prompt-box" id="p_biz">"Here is a 6-mark business question: [Insert Question]. Write a model answer that would get full marks, including Knowledge, Application, and Analysis."</div>
+                <button class="copy-btn" onclick="copyText('p_biz')">Copy Prompt</button>
+            </div>
+
+            <div class="tool-card biz">
+                <span class="tag">Economics</span>
+                <h3>Graph Describer</h3>
+                <p>Tells you exactly what to say about a graph.</p>
+                <div class="prompt-box" id="p_econ">"Describe exactly what happens to Price and Quantity when [Event happens, e.g., Demand shifts right]. Tell me exactly what to write."</div>
+                <button class="copy-btn" onclick="copyText('p_econ')">Copy Prompt</button>
+            </div>
+
+            <div class="tool-card tech">
+                <span class="tag">ICT / CS</span>
+                <h3>Code Fixer</h3>
+                <p>Fixes code and gives the working version.</p>
+                <div class="prompt-box" id="p_ict">"Fix this code immediately. Do not explain the theory, just give me the working code block that I can copy."</div>
+                <button class="copy-btn" onclick="copyText('p_ict')">Copy Prompt</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function copyText(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text);
+            alert("Prompt Copied! 📋 Paste it to get the answer.");
+        }
+
+        function filterSelection(category) {
+            var cards = document.getElementsByClassName("tool-card");
+            var btns = document.getElementsByClassName("filter-btn");
+
+            for (var i = 0; i < btns.length; i++) {
+                btns[i].classList.remove("active");
+                if (btns[i].getAttribute('onclick').includes(category)) {
+                    btns[i].classList.add("active");
+                }
+            }
+
+            for (var i = 0; i < cards.length; i++) {
+                if (category == "all") {
+                    cards[i].style.display = "block";
+                } else {
+                    if (cards[i].classList.contains(category)) {
+                        cards[i].style.display = "block";
+                    } else {
+                        cards[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
